@@ -7,7 +7,6 @@ xlsxwriter==3.2.0
 numpy==1.23.5
 jsonschema==4.17.3
 Cython==3.0.0
-cmdstanpy==0.9.68
 altair<6,>=4.0
 blinker<2,>=1.0.0
 cachetools<6,>=4.0
@@ -30,3 +29,4 @@ pytz>=2017.3
 openpyxl==3.1.2
 distutils
 pip==25.1.1
+setuptools<81
