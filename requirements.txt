@@ -1,6 +1,6 @@
 streamlit==1.38.0
 pandas==1.3.5
-prophet==1.0.1
+prophet==1.1.2
 plotly==5.22.0
 reportlab==4.0.9
 xlsxwriter==3.2.0
@@ -28,3 +28,5 @@ watchdog<5,>=2.1.5
 python-dateutil>=2.7.3
 pytz>=2017.3
 openpyxl==3.1.2
+distutils
+pip==25.1.1
