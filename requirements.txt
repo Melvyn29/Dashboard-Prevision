@@ -27,6 +27,5 @@ watchdog<5,>=2.1.5
 python-dateutil>=2.7.3
 pytz>=2017.3
 openpyxl==3.1.2
-distutils
 pip==25.1.1
-setuptools<81
+setuptools>=58.0.0
