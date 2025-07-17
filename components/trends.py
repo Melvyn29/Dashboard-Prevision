@@ -3,7 +3,6 @@ import pandas as pd
 import plotly.graph_objects as go
 from utils.forecast_utils import run_prophet_forecast, adjust_forecast
 from utils.data_utils import save_json_data, load_json_data
-from config.mappings import PN_MODEL_MAPPING
 
 def render_trends():
     st.markdown("<h2>Trends personnalisées</h2>", unsafe_allow_html=True)
@@ -57,7 +56,8 @@ def render_trends():
                     st.session_state.pn_last_updated if hasattr(st.session_state, 'pn_last_updated') else {},
                     pn_trend,
                     pn_trend_enabled,
-                    st.session_state.pn_file_name if hasattr(st.session_state, 'pn_file_name') else "pn_data.json"
+                    st.session_state.pn_file_name if hasattr(st.session_state, 'pn_file_name') else "pn_data.json",
+                    getattr(st.session_state, 'pn_aircraft_model', {})
                 )
                 st.success(f"Année {new_year} ajoutée !")
                 st.rerun()
@@ -77,7 +77,8 @@ def render_trends():
                 getattr(st.session_state, 'pn_last_updated', {}),
                 pn_trend,
                 pn_trend_enabled,
-                getattr(st.session_state, 'pn_file_name', "pn_data.json")
+                getattr(st.session_state, 'pn_file_name', "pn_data.json"),
+                getattr(st.session_state, 'pn_aircraft_model', {})
             )
             st.success(f"Année {year_to_remove} supprimée !")
             st.rerun()
@@ -132,7 +133,8 @@ def render_trends():
                     getattr(st.session_state, 'pn_last_updated', {}),
                     pn_trend_clean,
                     pn_trend_enabled_clean,
-                    getattr(st.session_state, 'pn_file_name', "pn_data.json")
+                    getattr(st.session_state, 'pn_file_name', "pn_data.json"),
+                    getattr(st.session_state, 'pn_aircraft_model', {})
                 )
                 st.success(f"Trend personnalisée enregistrée pour {pn_select} !")
                 st.rerun()
@@ -188,7 +190,8 @@ def render_trends():
                         getattr(st.session_state, 'pn_last_updated', {}),
                         pn_trend,
                         pn_trend_enabled,
-                        getattr(st.session_state, 'pn_file_name', "pn_data.json")
+                        getattr(st.session_state, 'pn_file_name', "pn_data.json"),
+                        getattr(st.session_state, 'pn_aircraft_model', {})
                     )
                     st.success(f"Tendances copiées de {source_pn} vers {target_pn} !")
                     st.rerun()
@@ -232,7 +235,8 @@ def render_trends():
                     getattr(st.session_state, 'pn_last_updated', {}),
                     pn_trend,
                     pn_trend_enabled,
-                    getattr(st.session_state, 'pn_file_name', "pn_data.json")
+                    getattr(st.session_state, 'pn_file_name', "pn_data.json"),
+                    getattr(st.session_state, 'pn_aircraft_model', {})
                 )
                 st.success(f"Tendances appliquées à {len(selected_pns)} PN(s) !")
                 st.rerun()
@@ -264,7 +268,8 @@ def render_trends():
                         getattr(st.session_state, 'pn_last_updated', {}),
                         pn_trend_reset,
                         pn_trend_enabled_reset,
-                        getattr(st.session_state, 'pn_file_name', "pn_data.json")
+                        getattr(st.session_state, 'pn_file_name', "pn_data.json"),
+                        getattr(st.session_state, 'pn_aircraft_model', {})
                     )
                     st.success("Toutes les trends personnalisées ont été réinitialisées et désactivées.")
                     st.session_state['reset_trends_confirm'] = False

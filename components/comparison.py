@@ -3,7 +3,7 @@ import pandas as pd
 import plotly.graph_objects as go
 from datetime import datetime
 from utils.forecast_utils import run_prophet_forecast, adjust_forecast
-from config.mappings import PN_MODEL_MAPPING
+from utils.data_utils import get_aircraft_model
 from prophet.diagnostics import cross_validation, performance_metrics
 
 def render_comparison():
@@ -12,10 +12,14 @@ def render_comparison():
     """
     st.subheader("Comparaison d’analyse")
     if st.session_state.pn_data:
+        # Initialiser le dictionnaire des modèles s'il n'existe pas
+        if 'pn_aircraft_model' not in st.session_state:
+            st.session_state.pn_aircraft_model = {}
+            
         pn_options = sorted(
-            [f"{pn} ({PN_MODEL_MAPPING.get(pn, 'Inconnu')})" for pn in st.session_state.pn_data.keys()],
+            [f"{pn} ({get_aircraft_model(pn, st.session_state.pn_aircraft_model)})" for pn in st.session_state.pn_data.keys()],
             key=lambda x: (
-                PN_MODEL_MAPPING.get(x.split(" (")[0], "Inconnu"),
+                get_aircraft_model(x.split(" (")[0], st.session_state.pn_aircraft_model),
                 x.split(" (")[0]
             )
         )
@@ -70,7 +74,7 @@ def render_comparison():
                 except Exception:
                     mae = None
                 synthese.append({
-                    "PN": f"{pn} ({PN_MODEL_MAPPING.get(pn, 'Inconnu')})",
+                    "PN": f"{pn} ({get_aircraft_model(pn, st.session_state.pn_aircraft_model)})",
                     "Total prévu": f"{total_prevu:.0f}",
                     "Moyenne mensuelle": f"{moyenne_mensuelle:.0f}",
                     "MAE": f"{mae:.1f}" if mae is not None else "N/A"

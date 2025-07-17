@@ -3,8 +3,7 @@ import plotly.graph_objects as go
 from datetime import datetime
 from utils.forecast_utils import run_prophet_forecast, adjust_forecast
 from utils.plot_utils import generate_forecast_plot, generate_trend_plot
-from utils.data_utils import export_to_excel
-from config.mappings import PN_MODEL_MAPPING
+from utils.data_utils import export_to_excel, get_aircraft_model
 from prophet.diagnostics import cross_validation, performance_metrics
 import pandas as pd
 
@@ -14,10 +13,14 @@ def render_analysis():
     """
     st.subheader("Analyse des prévisions")
     if st.session_state.pn_data:
+        # Initialiser le dictionnaire des modèles s'il n'existe pas
+        if 'pn_aircraft_model' not in st.session_state:
+            st.session_state.pn_aircraft_model = {}
+            
         pn_options = sorted(
-            [f"{pn} ({PN_MODEL_MAPPING.get(pn, 'Inconnu')})" for pn in st.session_state.pn_data.keys()],
+            [f"{pn} ({get_aircraft_model(pn, st.session_state.pn_aircraft_model)})" for pn in st.session_state.pn_data.keys()],
             key=lambda x: (
-                PN_MODEL_MAPPING.get(x.split(" (")[0], "Inconnu"),
+                get_aircraft_model(x.split(" (")[0], st.session_state.pn_aircraft_model),
                 x.split(" (")[0]
             )
         )
@@ -71,7 +74,7 @@ def render_analysis():
             trend_forecast = model.predict(all_dates)
             trend_forecast_adjusted = trend_forecast if not (enable_trends and trends) else adjust_forecast(trend_forecast, df, trends, apply_all_trends=True)
 
-            st.markdown(f"### Analyse du PN : **{selected_pn} ({PN_MODEL_MAPPING.get(selected_pn, 'Inconnu')})**")
+            st.markdown(f"### Analyse du PN : **{selected_pn} ({get_aircraft_model(selected_pn, st.session_state.pn_aircraft_model)})**")
             st.markdown(f"**Dernière mise à jour** : {st.session_state.pn_last_updated.get(selected_pn)}")
             st.markdown(f"**Utilisation des tendances personnalisées** : {'Activée' if enable_trends else 'Désactivée'}")
             # Affichage clair des tendances personnalisées
@@ -194,7 +197,7 @@ def render_analysis():
                 last_historical_date = df['ds'].max()
                 fig.add_vline(x=last_historical_date.timestamp() * 1000, line=dict(color='#CE1126', dash='dash'), annotation_text="Début des données historiques", annotation_position="top")
             fig.update_layout(
-                title=f'Prévisions pour {selected_pn} ({PN_MODEL_MAPPING.get(selected_pn, "Inconnu")})',
+                title=f'Prévisions pour {selected_pn} ({get_aircraft_model(selected_pn, st.session_state.pn_aircraft_model)})',
                 xaxis_title='Date',
                 yaxis_title='Quantité',
                 height=600,

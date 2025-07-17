@@ -8,11 +8,11 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, Tabl
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import cm
 from reportlab.lib.enums import TA_CENTER, TA_LEFT
-from config.mappings import PN_MODEL_MAPPING
 from utils.forecast_utils import run_prophet_forecast, adjust_forecast
+from utils.data_utils import get_aircraft_model
 from prophet.diagnostics import cross_validation, performance_metrics
 
-def generate_pdf_report(selected_pns, months, forecast_start_date, kpis_to_include, pn_data, pn_last_updated, pn_trend, pn_trend_enabled):
+def generate_pdf_report(selected_pns, months, forecast_start_date, kpis_to_include, pn_data, pn_last_updated, pn_trend, pn_trend_enabled, pn_aircraft_model=None):
     """
     Génère un rapport PDF pour les PN sélectionnés.
 
@@ -66,7 +66,7 @@ def generate_pdf_report(selected_pns, months, forecast_start_date, kpis_to_inclu
     # Tableau des PN
     pn_table_data = [[Paragraph("PN", table_header_style), Paragraph("Modèle", table_header_style)]]
     for pn in selected_pns:
-        pn_table_data.append([Paragraph(pn, table_cell_style), Paragraph(PN_MODEL_MAPPING.get(pn, "Inconnu"), table_cell_style)])
+        pn_table_data.append([Paragraph(pn, table_cell_style), Paragraph(get_aircraft_model(pn, pn_aircraft_model), table_cell_style)])
     pn_table = Table(pn_table_data, colWidths=[7*cm, 7*cm])
     pn_table.setStyle(TableStyle([
         ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#415A77')),
@@ -90,12 +90,12 @@ def generate_pdf_report(selected_pns, months, forecast_start_date, kpis_to_inclu
 
     for idx, pn in enumerate(selected_pns):
         # Titre PN
-        pn_title = f"Rapport de Prévision de la Demande PN : {pn} ({PN_MODEL_MAPPING.get(pn, 'Inconnu')})"
+        pn_title = f"Rapport de Prévision de la Demande PN : {pn} ({get_aircraft_model(pn, pn_aircraft_model)})"
         elements.append(Paragraph(pn_title, title_style))
         elements.append(Spacer(1, 0.4*cm))
         # Introduction supprimée ici (n’est plus répétée)
         elements.append(Paragraph("Informations Générales", heading_style))
-        general_info = f"PN : {pn} ({PN_MODEL_MAPPING.get(pn, 'Inconnu')})<br/>Dernière mise à jour : {pn_last_updated.get(pn, 'N/A')}"
+        general_info = f"PN : {pn} ({get_aircraft_model(pn, pn_aircraft_model)})<br/>Dernière mise à jour : {pn_last_updated.get(pn, 'N/A')}"
         elements.append(Paragraph(general_info, normal_style))
         elements.append(Spacer(1, 0.6*cm))
 
