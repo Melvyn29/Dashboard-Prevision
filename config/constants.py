@@ -27,9 +27,10 @@ MESSAGES = {
     'format_info': (
         "Le fichier Excel doit contenir les colonnes suivantes :\n"
         "- **Année** : L'année des données (ex : 2025).\n"
-        "- **Mois** : Le mois des données (ex : Janvier).\n"
+        "- **Mois** : Le mois des données (ex : Janvier ou janvier).\n"
         "- **Quantité** : La quantité associée au PN pour ce mois.\n"
         "\n"
+        "Note : Les mois peuvent être écrits avec ou sans majuscule initiale.\n"
         "Assurez-vous que les colonnes soient correctement nommées et que les données soient complètes."
     ),
     'batch_import_info': (

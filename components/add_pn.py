@@ -129,7 +129,8 @@ def _render_single_pn_form():
         
         uploaded_file = st.file_uploader(
             "Importer un fichier Excel (colonnes : Année, Mois, Quantité)", 
-            type=EXCEL_EXTENSIONS
+            type=EXCEL_EXTENSIONS,
+            help="Les mois peuvent être écrits avec ou sans majuscule (ex: Janvier ou janvier)"
         )
         submit_button = st.form_submit_button("Ajouter le PN")
 

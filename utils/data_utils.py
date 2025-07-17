@@ -129,7 +129,7 @@ def load_excel(file, file_name=None):
         df['Mois'] = df['Mois'].map(MONTH_MAP)
         if df['Mois'].isnull().any():
             raise ValueError(f"Certains mois dans le fichier {file_name or 'importé'} ne sont pas valides. "
-                           "Utilisez : Janvier, Février, etc.")
+                           "Utilisez : Janvier/janvier, Février/février, Mars/mars, etc.")
         
         # Filtrage des mois valides
         df = df[df['Mois'].between(1, 12)]
